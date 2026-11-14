@@ -5,8 +5,23 @@ Additionally, I trained models on the GoEmotions and BAH datasets. Their results
 - **GoEmotions** is a dataset of 58,000 Reddit comments annotated with 27 emotion categories and a neutral category ([Dataset paper](https://research.google/pubs/goemotions-a-dataset-of-fine-grained-emotions/))
 - **BAH** is a dataset designed for recognizing ambivalence and hesitancy. It contains video responses and their corresponding text transcripts. The dataset was introduced at ICLR 2026. ([Dataset paper](https://arxiv.org/pdf/2505.19328))
 
+The GoEmotions model is available on [Hugging Face](https://huggingface.co/FeDuck113/mamba3-go_emotions)
+
 For the BAH experiments, I trained models using two approaches: fine-tuning directly from the original Mamba 3 weights, and fine-tuning from a Mamba 3 model previously trained on GoEmotions. The latter approach was motivated by the hypothesis that emotional features can provide useful representations for detecting confidence and uncertainty.<br>
 I previously explored this hypothesis in our research paper [**TOMAR**](https://openreview.net/pdf?id=mdHET3onT2), developed for the [ABAW Workshop](https://affective-behavior-analysis-in-the-wild.github.io/11th/). The paper focused on developing a multimodal model for confidence and uncertainty detection. Within this work, I was also responsible for the text modality, but used Transformer-based architectures. Our team achieved **2nd place at the 11th ABAW Workshop**, providing further evidence of the effectiveness of this approach. A comparison of the results obtained in TOMAR with those from the Mamba 3 experiments is also presented below.
+
+## Table of Contents
+
+- [Project Structure](#project-structure)
+- [Results](#results)
+  - [GoEmotions test set](#goemotions-test-set)
+  - [BAH test set](#bah-test-set)
+  - [GoEmotions](#goemotions)
+  - [BAH](#bah)
+- [Quickstart](#quickstart)
+- [Training pipeline](#training-pipeline)
+- [Citation](#citation)
+- [License](#license)
 
 ## Project Structure
 ```text
@@ -155,7 +170,7 @@ Among these runs, run 83 has the highest validation macro F1 (0.7790), but its t
 
 
 ## Quickstart
-
+### Hugging Face
 The best GoEmotions model is available on [Hugging Face](https://huggingface.co/FeDuck113/mamba3-go_emotions). Clone this repository and install dependencies from `requirements.txt` (`mamba-ssm` installation may be quite hard), then run:
 
 ```python
@@ -166,6 +181,20 @@ predictions = model.predict("I am so grateful for your help!")
 print(predictions)
 ```
 
+The loaded model can also be fine-tuned with Hugging Face `Trainer`, for example on GoEmotions:
+
+```python
+model = load_model("FeDuck113/mamba3-go_emotions")
+
+training_args = TrainingArguments(...)
+trainer = Trainer(
+    model=model,
+    processing_class=model.tokenizer,
+    ... 
+)
+trainer.train()
+```
+### Local
 To load a downloaded model from a local folder, use `load_model_from_dir`. The folder must contain `model.safetensors`, `config.json` and the tokenizer files:
 
 ```python
