@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as follows."
+type: software
+title: "Mamba 3 Classifier"
+authors:
+  - family-names: "Shchetinin"
+    given-names: "Fedor"
+version: 1.0.0
+date-released: 2026-11-14
+repository-code: "https://github.com/FeDuck113/mamba3-classifier"
+license: Apache-2.0
